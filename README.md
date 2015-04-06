@@ -41,4 +41,4 @@ We have not worked with either PubNub or Ace editor before, which we will have t
 ## Q&A
 * Have you heard of Code Your Cloud?
 * Can you tap into the underlying runtime of the browser to do realtime JS?
-* Have you heard of ShareLaTech?
+* Have you heard of ShareLaTeX?
