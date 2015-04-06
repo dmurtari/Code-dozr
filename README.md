@@ -42,3 +42,5 @@ We have not worked with either PubNub or Ace editor before, which we will have t
 * Have you heard of Code Your Cloud?
 * Can you tap into the underlying runtime of the browser to do realtime JS?
 * Have you heard of ShareLaTeX?
+* Will we support different languages?
+* Will you have mobile support?
