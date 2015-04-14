@@ -1,0 +1,41 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @editor.name %>
+</p>
+
+<%= link_to 'Edit', edit_editor_path(@editor) %> |
+<%= link_to 'Back', editors_path %>
+
+<style type="text/css" media="screen">
+    textarea {
+        display: block;
+        margin: auto;
+        width: 600px;
+        height: 5px;
+    }
+    #editor {
+        display: block;
+        margin: auto;
+        width: 600px;
+        height: 300px;
+        border: 1px solid #888;
+    }
+    form {
+        text-align: center;
+    }
+</style>
+
+<div id="editor">
+  function foo(items) {
+    var x = "syntax highlighted";
+    return x;
+  }
+</div>
+
+<script>
+  var editor = ace.edit("editor");
+  editor.setTheme("ace/theme/monokai");
+  editor.getSession().setMode("ace/mode/javascript");
+</script>
