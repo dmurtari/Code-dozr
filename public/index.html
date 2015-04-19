@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
+<html itemscope itemtype="http://schema.org/Article">
 <head>
     <meta charset="UTF-8">
+    <meta name="google-signin-client_id" content="560403648624-2lg01n0r0giitk0sdhubm9ab9napkgut.apps.googleusercontent.com">
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  	</script>
+  	<script src="https://apis.google.com/js/platform.js" async defer></script>
     <title>Code-dozr</title>
 </head>
 <body>
     <h1>Code-dozr</h1>
+    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+    <img id="userImage" src=""/>
+    <h3 id="welcomeText"></h3>
+    <a id="signOut" href="#" onclick="signOut();" style="display: none">Sign out</a>
+	<script>
+		function onSignIn(googleUser) {
+			document.getElementById("signOut").style.display = "block";
+			var profile = googleUser.getBasicProfile();
+			console.log('ID: ' + profile.getId());
+			console.log('Name: ' + profile.getName());
+			console.log('Image URL: ' + profile.getImageUrl());
+			console.log('Email: ' + profile.getEmail());
+			document.getElementById("welcomeText").innerHTML = "Welcome "+profile.getName();
+			document.getElementById("userImage").src = ""+profile.getImageUrl();
+			document.getElementById("userImage").style.display = "block";
+		}
+
+		function signOut() {
+			document.getElementById("signOut").style.display = "none";
+		    var auth2 = gapi.auth2.getAuthInstance();
+		    auth2.signOut().then(function () {
+    			console.log('User signed out.');
+    		});
+    		document.getElementById("welcomeText").innerHTML = "";
+    		document.getElementById("userImage").src = "";
+    		document.getElementById("userImage").style.display = "none";
+  		}
+	</script>
 </body>
 </html>
