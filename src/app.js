@@ -1,7 +1,3 @@
-// var express = require('express');
-// var _ = require('lodash');
-// var app = express();
-
 // app.use(express.static(__dirname + '/public'));
 
 
@@ -10,16 +6,8 @@
 //     res.render('index.html');
 // });
 
-// app.set('port', (process.env.PORT || 3000));
-
-// var server = app.listen(app.get('port'), function() {
-//     var host = server.address().address;
-//     var port = server.address().port;
-//     console.log('App listening at http://%s:%s', host, port);
-// });
-
 var Duplex = require('stream').Duplex;
-var connect = require('connect');
+var express = require('express');
 var http = require('http');
 var serveStatic = require('serve-static');
 var browserChannel = require('browserchannel').server;
@@ -36,7 +24,7 @@ backend.submit('textareas', 'textarea1', { create: {type: 'text', data: ''}},
 var sharejs = require('share');
 var share = sharejs.server.createClient({ backend: backend });
 
-var app = connect();
+var app = express();
 
 app.use(serveStatic(__dirname + "/../public"));
 app.use(serveStatic(sharejs.scriptsDir));
@@ -67,9 +55,10 @@ app.use(browserChannel({ cors: '*' }, function (client) {
     return share.listen(stream);
 }));
 
-var server = http.createServer(app);
+app.set('port', (process.env.PORT || 3000));
 
-var port = 3000
-server.listen(port, function() {
-    console.log('Listening on ' + port);
+var server = app.listen(app.get('port'), function() {
+    var host = server.address().address;
+    var port = server.address().port;
+    console.log('App listening at http://%s:%s', host, port);
 });
