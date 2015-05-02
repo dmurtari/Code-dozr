@@ -83,5 +83,5 @@ wss.on('connection', function (client) {
     });
 
     return share.listen(stream);
-})
+});
 

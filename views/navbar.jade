@@ -2,7 +2,7 @@ meta(charset="UTF-8")
 meta(name="google-signin-client_id",content="560403648624-2lg01n0r0giitk0sdhubm9ab9napkgut.apps.googleusercontent.com")
 script(src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js")
 script(src="https://apis.google.com/js/platform.js" async defer)
-div.container 
+div.container
   nav(class="navbar navbar-default")
     div.container-fluid
       div.navbar-header
@@ -20,11 +20,12 @@ div.container
           img(id="userImage",src="",height="60")
         li
           a(id="signOut",href="#",onclick="signOut();",style="display: none") Sign out
-        
+
 script.
   function onSignIn(googleUser) {
       document.getElementById("signOut").style.display = "block";
       var profile = googleUser.getBasicProfile();
+      localStorage.setItem("email", profile.getEmail());
       console.log('ID: ' + profile.getId());
       console.log('Name: ' + profile.getName());
       console.log('Image URL: ' + profile.getImageUrl());
