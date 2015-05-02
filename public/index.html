@@ -1,45 +1,61 @@
-<style>
-  #pad {
-    width: 100%;
-    height: 100%;
-    font-size: 20px;
-    font-family: monaco;
-    background: -webkit-canvas(cursors);
-    background-repeat: no-repeat;
-  }
-</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Editor</title>
+    <style>
+        #pad {
+            width: 100%;
+            height: 100%;
+            font-size: 20px;
+            font-family: monaco;
+            background: -webkit-canvas(cursors);
+            background-repeat: no-repeat;
+        }
+        .CodeMirror {
+            border: 1px solid #eee;
+            height: 100% ! important;
+        }
+        html, body {
+            height: 100%;
+        }
+    </style>
 
-<link rel="stylesheet" href="codemirror/lib/codemirror.css" type="text/css" media="screen" title="no title" charset="utf-8">
-<link rel="stylesheet" href="codemirror/theme/paraiso-dark.css" type="text/css">
+    <link rel="stylesheet" href="codemirror/lib/codemirror.css" type="text/css" media="screen" title="no title" charset="utf-8">
+    <link rel="stylesheet" href="codemirror/theme/twilight.css" type="text/css">
 
-<textarea id='pad' autofocus>Connecting...</textarea>
+</head>
+<body>
+    <textarea id='pad' autofocus>Connecting...</textarea>
 
-<script src="share.uncompressed.js"></script>
-<script src="codemirror/lib/codemirror.js"></script>
-<script src="share-codemirror.js"></script>
-<script src="codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
+    <script src="share.uncompressed.js"></script>
+    <script src="codemirror/lib/codemirror.js"></script>
+    <script src="share-codemirror.js"></script>
+    <script src="codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
 
-<script>
-var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
-cm.setOption('mode', 'javascript');
-cm.setOption('lineNumbers', true);
-cm.setOption('theme', 'paraiso-dark')
-//cm.setMode('javascript')
+    <script>
+        var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
+        cm.setOption('mode', 'javascript');
+        cm.setOption('lineNumbers', true);
+        cm.setOption('theme', 'twilight');
+        //cm.setMode('javascript')
 
-var elem = document.getElementById('pad');
+        var elem = document.getElementById('pad');
 
-var ws = new WebSocket('ws://' + window.location.host );
+        var ws = new WebSocket('ws://' + window.location.host );
 
-var sjs = new window.sharejs.Connection( ws );
+        var sjs = new window.sharejs.Connection( ws );
 
-var doc = sjs.get( 'users', 'codeDozr' );
+        var doc = sjs.get( 'users', 'codeDozr' );
 
-doc.subscribe();
+        doc.subscribe();
 
-doc.whenReady(function () {
-  if (!doc.type) doc.create('text');
-  if (doc.type && doc.type.name === 'text')
-  doc.attachCodeMirror(cm);
-});
+        doc.whenReady(function () {
+        if (!doc.type) doc.create('text');
+            if (doc.type && doc.type.name === 'text')
+                doc.attachCodeMirror(cm);
+        });
 
-</script>
+        </script>
+</body>
+</html>
