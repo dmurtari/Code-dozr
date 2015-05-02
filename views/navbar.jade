@@ -17,10 +17,10 @@ div.container
         li
           img(id="userImage",src="")
         li
-          a(id="signOut",href="#",onclick="signOut();",style="display: none") Sign out
+          a(id="welcomeText")
         li
-          a(id="welcomeText") TEST
-
+          a(id="signOut",href="#",onclick="signOut();",style="display: none") Sign out
+        
 script.
   function onSignIn(googleUser) {
       document.getElementById("signOut").style.display = "block";
