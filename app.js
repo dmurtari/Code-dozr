@@ -3,6 +3,8 @@ var express = require('express');
 var serveStatic = require('serve-static');
 var browserChannel = require('browserchannel').server;
 var livedb = require('livedb');
+var _ = require('lodash')
+
 var shareCodeMirror = require('share-codemirror');
 
 var app = express();
@@ -12,6 +14,7 @@ var db = require('livedb-mongo')('mongodb://localhost:27017/codeDozr?auto_reconn
 });
 
 app.set('port', (process.env.PORT || 3000));
+app.set('view engine', 'jade')
 
 var server = app.listen(app.get('port'), function() {
     var host = server.address().address;
@@ -36,6 +39,8 @@ app.use(serveStatic(sharejs.scriptsDir));
 app.use(serveStatic(shareCodeMirror.scriptsDir));
 
 app.use('/codemirror', express.static(__dirname + '/node_modules/codemirror/'));
+
+require('./routes/editor')(app)
 
 wss.on('connection', function (client) {
     console.log('Client connected');
