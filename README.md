@@ -1,6 +1,12 @@
 # Code-dozr
 Collaborative online code editor
 
+# How to run
+Run `npm install`
+Then run `mongod` in a different window, assuming you have mongod installed
+Start the app by running `node app.js`
+
+
 ## Team Name
 NP-Incomplete
 
