@@ -28,6 +28,10 @@ var share = sharejs.server.createClient({
     backend: backend
 });
 
+app.get('/', function(req, res) {
+    res.render('index.jade')
+})
+
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({
     server: server
@@ -40,6 +44,7 @@ app.use(serveStatic(shareCodeMirror.scriptsDir));
 
 app.use('/codemirror', express.static(__dirname + '/node_modules/codemirror/'));
 require('./routes/editor')(app)
+
 
 wss.on('connection', function (client) {
     console.log('Client connected');
@@ -79,3 +84,4 @@ wss.on('connection', function (client) {
 
     return share.listen(stream);
 })
+
