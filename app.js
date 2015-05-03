@@ -3,7 +3,8 @@ var express = require('express');
 var serveStatic = require('serve-static');
 var browserChannel = require('browserchannel').server;
 var livedb = require('livedb');
-var _ = require('lodash')
+var _ = require('lodash');
+var fs = require('fs');
 
 var shareCodeMirror = require('share-codemirror');
 
@@ -28,9 +29,15 @@ var share = sharejs.server.createClient({
     backend: backend
 });
 
+var supportedLanguages = JSON.parse(fs.readFileSync('supported_languages.json'));
+
 app.get('/', function(req, res) {
-    res.render('index.jade')
-})
+    res.render('index.jade');
+});
+
+app.get('/supported_languages', function(req, res){
+    res.send(supportedLanguages);
+});
 
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({

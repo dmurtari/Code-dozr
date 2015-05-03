@@ -16,16 +16,19 @@
 
 <link rel="stylesheet" href="codemirror/lib/codemirror.css" type="text/css" media="screen" title="no title" charset="utf-8">
 <link rel="stylesheet" href="codemirror/theme/paraiso-dark.css" type="text/css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 
 <h3>Editor</h3>
 
 <div class="row" id="file-form">
     <div class="col-lg-4">
-        <input type="text" id="invitation-email" class="form-control" placeholder="Invitation email">
+        <input type="text" id="invitation-email" class="form-control" placeholder="Invitation email (optional)">
     </div>
-    <div class="col-lg-4">
+    <div class="col-lg-8">
         <div class="input-group">
             <input type="text" id="file-name" class="form-control" placeholder="File name">
+            <span class="input-group-btn" style="width:0px;"></span>
+            <input type="text" id="language" class="form-control" placeholder="Language (optional)">
             <span class="input-group-btn">
                 <button id="create-file" class="btn btn-default" type="button">Create/Connect</button>
             </span>
@@ -39,56 +42,98 @@
     <button id="create-new" class="btn btn-default">Create new file</button>
 </div>
 
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="share.uncompressed.js"></script>
 <script src="codemirror/lib/codemirror.js"></script>
 <script src="share-codemirror.js"></script>
-<script src="codemirror/mode/javascript/javascript.js" type="text/javascript" charset="utf-8"></script>
 
 <script>
 
-    $('#create-file').on('click', function(event) {
-        var invite = $('#invitation-email').val();
-        var fileName = $('#file-name').val();
-        var combined = '';
-        var email = localStorage.getItem("email");
-        if (invite) {
-            combined = invite + fileName;
-        } else {
-            console.log(email);
-            combined = email + fileName;
-        }
-        $('#file-form').toggle();
-        $('#pad').toggle();
-        $('#new-button').toggle();
-        createEditor(combined);
-    });
+    $(document).ready(function() {
 
-    $('#create-new').on('click', function(event) {
-        location.reload();
-    })
-
-    var createEditor = function(fileName) {
-        var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
-        cm.setOption('mode', 'javascript');
-        cm.setOption('lineNumbers', true);
-        cm.setOption('theme', 'paraiso-dark')
-        //cm.setMode('javascript')
-
-        var elem = document.getElementById('pad');
-
-        var ws = new WebSocket('ws://' + window.location.host );
-
-        var sjs = new window.sharejs.Connection( ws );
-
-        var doc = sjs.get( 'users', fileName );
-
-        doc.subscribe();
-
-        doc.whenReady(function () {
-            if (!doc.type) doc.create('text');
-            if (doc.type && doc.type.name === 'text')
-                doc.attachCodeMirror(cm);
+        var supportedLanguages = null;
+        $.get( '/supported_languages', function(data) {
+            supportedLanguages = data.supportedLanguages;
+            console.log(data);
+            $('#language').autocomplete({
+                source: supportedLanguages
+            });
         });
-    }
+
+        $('#create-file').on('click', function(event) {
+            var language = $('#language').val();
+            if (!language in supportedLanguages) {
+                console.log("Hello " + language);
+                language = 'text';
+            }
+            var invite = $('#invitation-email').val();
+            var fileName = $('#file-name').val();
+            var combined = '';
+            var email = localStorage.getItem("email");
+            if (invite) {
+                combined = invite + fileName;
+            } else {
+                console.log(email);
+                combined = email + fileName;
+            }
+            if (fileName) {
+                $('#file-form').toggle();
+                $('#pad').toggle();
+                $('#new-button').toggle();
+                // createEditor(combined, language);
+                importLanguage(combined, language);
+            } else {
+                console.log(language);
+            }
+        });
+
+        var importLanguage = function(fileName, language) {
+            loadJS('codemirror/mode/' + language + '/' + language + '.js', function () {
+                createEditor(fileName, language);
+            });
+        }
+
+        var loadJS = function(src, callback) {
+            var s = document.createElement('script');
+            s.src = src;
+            s.async = true;
+            s.onreadystatechange = s.onload = function () {
+                var state = s.readyState;
+                if (!callback.done && (!state || /loaded|complete/.test(state))) {
+                    callback.done = true;
+                    callback();
+                }
+            };
+            document.getElementsByTagName('head')[0].appendChild(s);
+        }
+
+        $('#create-new').on('click', function(event) {
+            location.reload();
+        })
+
+        var createEditor = function(fileName, language) {
+            var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
+            cm.setOption('mode', language);
+            cm.setOption('lineNumbers', true);
+            cm.setOption('theme', 'paraiso-dark')
+            //cm.setMode('javascript')
+
+            var elem = document.getElementById('pad');
+
+            var ws = new WebSocket('ws://' + window.location.host );
+
+            var sjs = new window.sharejs.Connection( ws );
+
+            var doc = sjs.get( 'users', fileName );
+
+            doc.subscribe();
+
+            doc.whenReady(function () {
+                if (!doc.type) doc.create('text');
+                if (doc.type && doc.type.name === 'text')
+                    doc.attachCodeMirror(cm);
+            });
+        }
+    });
 
 </script>
