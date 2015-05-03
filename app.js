@@ -10,7 +10,7 @@ var shareCodeMirror = require('share-codemirror');
 
 var app = express();
 
-var db = require('livedb-mongo')('mongodb://localhost:27017/codeDozr?auto_reconnect', {
+var db = require('livedb-mongo')('mongodb://coder:codedozr@ds031982.mongolab.com:31982/code-dozr?auto_reconnect', {
     safe: true
 });
 
