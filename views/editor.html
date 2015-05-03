@@ -7,6 +7,7 @@
         background: -webkit-canvas(cursors);
         background-repeat: no-repeat;
     }
+
     .CodeMirror {
         margin: 20px;
         border: 1px solid #eee;
@@ -36,11 +37,19 @@
     </div><!-- /.col-lg-6 -->
 </div>
 
-<textarea id='pad' autofocus style="display: none;">Connecting...</textarea>
+<textarea id='pad' autofocus style="display: none;"></textarea>
 
-<div class="row" id="new-button" style="display: none;">
-    <button id="create-new" class="btn btn-default">Create new file</button>
+<div class="row">
+    <div class="col-lg-2" id="new-button" style="display: none;">
+        <button id="create-new" class="btn btn-default">Create new file</button>
+    </div>
+
+    <div class="col-lg-2" id="execute-button" style="display: none;">
+        <button id="execute" class="btn btn-default">Execute Code</button>
+    </div>
 </div>
+
+<textarea id='code' style="display: none;"></textarea>
 
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="share.uncompressed.js"></script>
@@ -70,6 +79,7 @@
             var fileName = $('#file-name').val();
             var combined = '';
             var email = localStorage.getItem("email");
+
             if (invite) {
                 combined = invite + fileName;
             } else {
@@ -80,6 +90,7 @@
                 $('#file-form').toggle();
                 $('#pad').toggle();
                 $('#new-button').toggle();
+                $('#execute-button').toggle();
                 // createEditor(combined, language);
                 importLanguage(combined, language);
             } else {
@@ -111,6 +122,12 @@
             location.reload();
         })
 
+        $('#execute').on('click', function(event) {
+            var value = $("#pad").val();
+            console.log(value)
+            console.log(eval(value))
+        })
+
         var createEditor = function(fileName, language) {
             var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
             cm.setOption('mode', language);
@@ -124,7 +141,7 @@
 
             var sjs = new window.sharejs.Connection( ws );
 
-            var doc = sjs.get( 'users', fileName );
+            var doc = sjs.get( 'user', fileName );
 
             doc.subscribe();
 
