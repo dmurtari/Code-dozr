@@ -1,9 +1,48 @@
-div.container 
+meta(charset="UTF-8")
+meta(name="google-signin-client_id",content="560403648624-2lg01n0r0giitk0sdhubm9ab9napkgut.apps.googleusercontent.com")
+script(src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js")
+script(src="https://apis.google.com/js/platform.js" async defer)
+div.container
   nav(class="navbar navbar-default")
-    div.navbar-header
-      div.navbar-brand
-        a(href='/') Collaborative Code Editor
-    ul(class="nav nav-tabs")
-      li
-        a(href='/editor') Editor
+    div.container-fluid
+      div.navbar-header
+        div.navbar-brand
+          a(href='/') Collaborative Code Editor
+      ul(class="nav navbar-nav")
+        li
+          a(href='/editor') Editor
+      ul(class="nav navbar-nav navbar-right")
+        li
+          div(class="g-signin2",data-onsuccess="onSignIn",id="signInButton")
+        li
+          a(id="welcomeText")
+        li
+          img(id="userImage",src="",height="60")
+        li
+          a(id="signOut",href="#",onclick="signOut();",style="display: none") Sign out
 
+script.
+  function onSignIn(googleUser) {
+      document.getElementById("signOut").style.display = "block";
+      var profile = googleUser.getBasicProfile();
+      localStorage.setItem("email", profile.getEmail());
+      console.log('ID: ' + profile.getId());
+      console.log('Name: ' + profile.getName());
+      console.log('Image URL: ' + profile.getImageUrl());
+      console.log('Email: ' + profile.getEmail());
+      document.getElementById("welcomeText").innerHTML = "Welcome "+profile.getName();
+      document.getElementById("userImage").src = ""+profile.getImageUrl();
+      document.getElementById("userImage").style.display = "block";
+      document.getElementById("signInButton").style.display = "none";
+  }
+  function signOut() {
+      document.getElementById("signOut").style.display = "none";
+      var auth2 = gapi.auth2.getAuthInstance();
+      auth2.signOut().then(function () {
+          console.log('User signed out.');
+      });
+      document.getElementById("welcomeText").innerHTML = "";
+      document.getElementById("userImage").src = "";
+      document.getElementById("userImage").style.display = "none";
+      document.getElementById("signInButton").style.display = "block";
+  }

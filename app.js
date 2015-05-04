@@ -3,13 +3,14 @@ var express = require('express');
 var serveStatic = require('serve-static');
 var browserChannel = require('browserchannel').server;
 var livedb = require('livedb');
-var _ = require('lodash')
+var _ = require('lodash');
+var fs = require('fs');
 
 var shareCodeMirror = require('share-codemirror');
 
 var app = express();
 
-var db = require('livedb-mongo')('mongodb://localhost:27017/codeDozr?auto_reconnect', {
+var db = require('livedb-mongo')('mongodb://admin:codedozr@ds031982.mongolab.com:31982/code-dozr?auto_reconnect', {
     safe: true
 });
 
@@ -28,9 +29,15 @@ var share = sharejs.server.createClient({
     backend: backend
 });
 
+var supportedLanguages = JSON.parse(fs.readFileSync('supported_languages.json'));
+
 app.get('/', function(req, res) {
-    res.render('index.jade')
-})
+    res.render('index.jade');
+});
+
+app.get('/supported_languages', function(req, res){
+    res.send(supportedLanguages);
+});
 
 var WebSocketServer = require('ws').Server;
 var wss = new WebSocketServer({
@@ -83,5 +90,5 @@ wss.on('connection', function (client) {
     });
 
     return share.listen(stream);
-})
+});
 
