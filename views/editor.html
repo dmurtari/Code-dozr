@@ -37,6 +37,10 @@
     </div><!-- /.col-lg-6 -->
 </div>
 
+<div class="highlight" id="results-box" style="display: none;">
+    <code id="results" class="language-javascript">// This is where your results will be displayed</code>    
+</div>
+
 <textarea id='pad' autofocus style="display: none;"></textarea>
 
 <div class="row">
@@ -91,6 +95,7 @@
                 $('#pad').toggle();
                 $('#new-button').toggle();
                 $('#execute-button').toggle();
+                $('#results-box').toggle();
                 // createEditor(combined, language);
                 importLanguage(combined, language);
             } else {
@@ -123,10 +128,16 @@
         })
 
         $('#execute').on('click', function(event) {
-            var value = $("#pad").val();
-            console.log(value)
-            console.log(eval(value))
+            var editor = $('.CodeMirror')[0].CodeMirror;    
+            console.log(editor.getValue());
+            $('#results').replaceWith(
+                "<code id='results' class='language-javascript'>" + 
+                eval(String(editor.getValue())) + 
+                "</code>"
+            );
         })
+
+        
 
         var createEditor = function(fileName, language) {
             var cm = CodeMirror.fromTextArea( document.getElementById('pad') )
