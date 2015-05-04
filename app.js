@@ -51,6 +51,7 @@ app.use(serveStatic(shareCodeMirror.scriptsDir));
 
 app.use('/codemirror', express.static(__dirname + '/node_modules/codemirror/'));
 require('./routes/editor')(app)
+require('./routes/about')(app)
 
 
 wss.on('connection', function (client) {

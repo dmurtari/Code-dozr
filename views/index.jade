@@ -1,5 +1,10 @@
 extends layout.jade
 
 block content
-  h1= "Welcome to Code-dozr, the collaborative code editor"
-  include index.html
+  div.panel.panel-default
+    div.panel-body
+      h1= "Welcome to Code-dozr, the collaborative code editor"
+      h2= "Easily and quickly start coding together"
+
+      p= "For all the times during a technical interview that you wished that you had an actual functional collaborative code editor. Code-dozr allows you to collaboratively write code together. Javascript code that you write can even be executed in the browser!"
+      include index.html
